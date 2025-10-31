@@ -250,7 +250,7 @@ public class AdminController {
 
         try {
             // Use the correct upload directory
-            Path uploadDir = Paths.get("C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads");
+            Path uploadDir = Paths.get("C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads/");
             Path filePath = uploadDir.resolve(candidate.getResumePath()).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 

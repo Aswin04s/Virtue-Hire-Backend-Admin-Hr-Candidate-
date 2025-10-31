@@ -18,12 +18,12 @@ public class VirtueHireApplication implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/");
 
-        // Serve uploaded files
+        // Serve uploaded files from project root uploads folder
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads/");
+                .addResourceLocations("file:C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads/");
 
-        // Serve HR files
+        // Serve HR files from the same uploads folder
         registry.addResourceHandler("/hrs/file/**")
-                .addResourceLocations("file:C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads/");
+                .addResourceLocations("file:C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads/");
     }
 }

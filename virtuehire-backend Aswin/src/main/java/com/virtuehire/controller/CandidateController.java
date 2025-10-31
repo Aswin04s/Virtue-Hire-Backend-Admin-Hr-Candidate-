@@ -27,7 +27,7 @@ public class CandidateController {
     private final CandidateService candidateService;
     private final AssessmentResultService assessmentResultService;
 
-    private final Path uploadDir = Paths.get("C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads");
+    private final Path uploadDir = Paths.get("C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads");
 
     public CandidateController(CandidateService candidateService,
                                AssessmentResultService assessmentResultService) {

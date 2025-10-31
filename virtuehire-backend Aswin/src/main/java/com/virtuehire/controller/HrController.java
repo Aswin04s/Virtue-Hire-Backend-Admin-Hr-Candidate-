@@ -66,7 +66,7 @@ public class HrController {
         }
 
         try {
-            String uploadsDir = "C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads/";
+            String uploadsDir = "C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads/";
             File directory = new File(uploadsDir);
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -267,7 +267,7 @@ public class HrController {
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
-            String uploadsDir = "C:/Users/aswin/Desktop/Virtue Hire/virtuehire-payment/virtuehire-backend Aswin/uploads/";
+            String uploadsDir = "C:/Users/aswin/Desktop/VirtueHire-backend Aswin/uploads/";
             Path filePath = Paths.get(uploadsDir).resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
