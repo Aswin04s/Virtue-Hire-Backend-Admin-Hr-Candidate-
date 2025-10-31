@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Plans - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .plan-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Choose Your Plan</h2>
+    <p class="text-center text-muted mb-5">Select the plan that best fits your recruitment needs</p>
+
+    <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="row">
+        <!-- Monthly Unlimited Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card plan-card text-center h-100" style="position: relative;">
+                <span class="popular-badge">MOST POPULAR</span>
+                <div class="card-header bg-success text-white py-4">
+                    <h3>Monthly Unlimited</h3>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-4">
+                        <h1 class="display-4">₹<span th:text="${monthlyPrice}"></span></h1>
+                        <p class="text-muted">per month</p>
+                    </div>
+
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2">✓ <strong>Unlimited</strong> candidate views</li>
+                        <li class="mb-2">✓ Valid for <strong>30 days</strong></li>
+                        <li class="mb-2">✓ Best for active recruiters</li>
+                        <li class="mb-2">✓ Download all resumes</li>
+                        <li class="mb-2">✓ Access candidate contact info</li>
+                        <li class="mb-2">✓ Priority support</li>
+                    </ul>
+
+                    <form action="/payments/process-payment" method="post" class="mt-auto">
+                        <input type="hidden" name="planType" value="MONTHLY_UNLIMITED">
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            Buy Now
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Best value for high-volume hiring</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ten Candidates Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card plan-card text-center h-100">
+                <div class="card-header bg-primary text-white py-4">
+                    <h3>10 Candidates</h3>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-4">
+                        <h1 class="display-4">₹<span th:text="${tenPrice}"></span></h1>
+                        <p class="text-muted">one-time payment</p>
+                    </div>
+
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2">✓ View <strong>10 candidates</strong></li>
+                        <li class="mb-2">✓ <strong>No expiry date</strong></li>
+                        <li class="mb-2">✓ Use views anytime</li>
+                        <li class="mb-2">✓ Download resumes</li>
+                        <li class="mb-2">✓ Access contact information</li>
+                        <li class="mb-2">✓ Perfect for project hiring</li>
+                    </ul>
+
+                    <form action="/payments/process-payment" method="post" class="mt-auto">
+                        <input type="hidden" name="planType" value="TEN_CANDIDATES">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Buy Now
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Great for medium-scale hiring</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Candidate Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card plan-card text-center h-100">
+                <div class="card-header bg-info text-white py-4">
+                    <h3>Single Candidate</h3>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-4">
+                        <h1 class="display-4">₹<span th:text="${singlePrice}"></span></h1>
+                        <p class="text-muted">per view</p>
+                    </div>
+
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-2">✓ View <strong>1 candidate</strong></li>
+                        <li class="mb-2">✓ Instant access</li>
+                        <li class="mb-2">✓ No commitment</li>
+                        <li class="mb-2">✓ Download resume</li>
+                        <li class="mb-2">✓ Get contact details</li>
+                        <li class="mb-2">✓ Try before you buy</li>
+                    </ul>
+
+                    <form action="/payments/process-payment" method="post" class="mt-auto">
+                        <input type="hidden" name="planType" value="SINGLE_CANDIDATE">
+                        <button type="submit" class="btn btn-info btn-lg w-100">
+                            Buy Now
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>Perfect for one-time hiring</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/hrs/dashboard" class="btn btn-secondary btn-lg">Back to Dashboard</a>
+    </div>
+
+    <div class="mt-5 p-4 bg-light rounded">
+        <h4>Frequently Asked Questions</h4>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        What happens when my Monthly Unlimited plan expires?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Your plan will automatically expire after 30 days. You'll need to purchase a new plan to continue viewing candidate details.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Can I purchase multiple plans?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes! If you purchase 10 Candidates or Single Candidate plans, the views will be added to your account. However, Monthly Unlimited will replace any existing plan.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Do the 10 Candidates views expire?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        No! The 10 Candidates and Single Candidate plans never expire. Use your views whenever you need them.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

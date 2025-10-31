@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Dashboard - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Welcome, <span th:text="${hr.fullName}"></span>!</h2>
+
+    <div class="row mt-4">
+        <!-- Profile Card -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Company:</strong> <span th:text="${hr.companyName}"></span></p>
+                    <p><strong>Job Title:</strong> <span th:text="${hr.jobTitle}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${hr.email}"></span></p>
+                    <p><strong>Phone:</strong> <span th:text="${hr.phoneNumber}"></span></p>
+                    <p><strong>Industry:</strong> <span th:text="${hr.industry}"></span></p>
+                    <p><strong>Location:</strong> <span th:text="${hr.city} + ', ' + ${hr.state}"></span></p>
+                    <p><strong>Verified:</strong>
+                        <span th:if="${hr.verified}" class="badge bg-success">Yes</span>
+                        <span th:unless="${hr.verified}" class="badge bg-warning">Pending</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== UPDATED: Plan Card with New Plans ===== -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>Current Plan</h5>
+                </div>
+                <div class="card-body">
+                    <!-- No Active Plan -->
+                    <div th:if="${hr.planType == null}">
+                        <h4 class="text-muted">No Active Plan</h4>
+                        <p>Purchase a plan to start viewing candidate details</p>
+                        <a href="/payments/plans" class="btn btn-success">Browse Plans</a>
+                    </div>
+
+                    <!-- Monthly Unlimited Plan -->
+                    <div th:if="${hr.planType == 'MONTHLY_UNLIMITED'}">
+                        <h4 class="text-success">Monthly Unlimited</h4>
+                        <p><strong>Status:</strong>
+                            <span th:if="${hr.planExpiryDate != null and #temporals.isAfter(hr.planExpiryDate, #temporals.createNow())}"
+                                  class="badge bg-success">Active</span>
+                            <span th:unless="${hr.planExpiryDate != null and #temporals.isAfter(hr.planExpiryDate, #temporals.createNow())}"
+                                  class="badge bg-danger">Expired</span>
+                        </p>
+                        <p><strong>Expires:</strong> <span th:text="${#temporals.format(hr.planExpiryDate, 'dd-MM-yyyy HH:mm')}"></span></p>
+                        <p><strong>Access:</strong> Unlimited candidate views</p>
+                        <a href="/payments/plans" class="btn btn-primary">Renew Plan</a>
+                    </div>
+
+                    <!-- Ten Candidates Plan -->
+                    <div th:if="${hr.planType == 'TEN_CANDIDATES'}">
+                        <h4 class="text-primary">10 Candidates Plan</h4>
+                        <p><strong>Remaining Views:</strong>
+                            <span class="badge bg-primary" th:text="${hr.remainingViews}"></span>
+                        </p>
+                        <p><strong>Access:</strong> View-based (no expiry)</p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar"
+                                 th:style="'width: ' + ${hr.remainingViews * 10} + '%'"
+                                 th:text="${hr.remainingViews} + ' left'"></div>
+                        </div>
+                        <a href="/payments/plans" class="btn btn-primary mt-3">Buy More Views</a>
+                    </div>
+
+                    <!-- Single Candidate Plan -->
+                    <div th:if="${hr.planType == 'SINGLE_CANDIDATE'}">
+                        <h4 class="text-info">Single Candidate Plan</h4>
+                        <p><strong>Remaining Views:</strong>
+                            <span class="badge bg-info" th:text="${hr.remainingViews}"></span>
+                        </p>
+                        <p><strong>Access:</strong> Pay-per-view</p>
+                        <a href="/payments/plans" class="btn btn-info">Purchase More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/hrs/candidates" class="btn btn-primary me-2">Browse Candidates</a>
+                    <a href="/payments/plans" class="btn btn-success me-2">View Plans</a>
+                    <a href="/payments/history" class="btn btn-info me-2">Payment History</a>
+                    <a href="/hrs/logout" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

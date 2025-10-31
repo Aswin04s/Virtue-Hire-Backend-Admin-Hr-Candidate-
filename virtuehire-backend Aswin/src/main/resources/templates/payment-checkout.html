@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .payment-method:hover {
+            border-color: #007bff;
+        }
+        .payment-method.selected {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+        .payment-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/hrs/dashboard">
+            <i class="fas fa-gem me-2"></i>VirtueHire
+        </a>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Complete Your Purchase</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Order Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Order Summary</h5>
+                            <div th:if="${payment}">
+                                <p><strong>Plan:</strong> <span th:text="${payment.planType}"></span></p>
+                                <p><strong>Amount:</strong> ₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span></p>
+                                <p><strong>Description:</strong> <span th:text="${payment.description}"></span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6>Total Amount</h6>
+                                    <h3 class="text-primary">₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span></h3>
+                                    <small class="text-muted">Inclusive of all taxes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <h5 class="mb-3">Select Payment Method</h5>
+
+                    <form th:action="@{/payments/process}" method="post">
+                        <input type="hidden" name="paymentGatewayId" th:value="${payment.paymentGatewayId}">
+
+                        <!-- Credit/Debit Card -->
+                        <div class="payment-method" onclick="selectPaymentMethod('card')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="card" value="CREDIT_CARD" checked>
+                                <label class="form-check-label d-flex align-items-center" for="card">
+                                    <i class="fas fa-credit-card payment-icon text-primary"></i>
+                                    <div>
+                                        <h6 class="mb-1">Credit/Debit Card</h6>
+                                        <small class="text-muted">Pay securely with your card</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- UPI -->
+                        <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="upi" value="UPI">
+                                <label class="form-check-label d-flex align-items-center" for="upi">
+                                    <i class="fas fa-mobile-alt payment-icon text-success"></i>
+                                    <div>
+                                        <h6 class="mb-1">UPI Payment</h6>
+                                        <small class="text-muted">Instant payment using UPI</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Net Banking -->
+                        <div class="payment-method" onclick="selectPaymentMethod('netbanking')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="netbanking" value="NETBANKING">
+                                <label class="form-check-label d-flex align-items-center" for="netbanking">
+                                    <i class="fas fa-university payment-icon text-info"></i>
+                                    <div>
+                                        <h6 class="mb-1">Net Banking</h6>
+                                        <small class="text-muted">Transfer from your bank account</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Mock Payment (For Demo) -->
+                        <div class="payment-method" onclick="selectPaymentMethod('mock')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="mock" value="MOCK">
+                                <label class="form-check-label d-flex align-items-center" for="mock">
+                                    <i class="fas fa-code payment-icon text-warning"></i>
+                                    <div>
+                                        <h6 class="mb-1">Mock Payment (Demo)</h6>
+                                        <small class="text-muted">Test payment simulation</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                                </label>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-lock me-2"></i>Pay ₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span>
+                                </button>
+                                <a href="/payments/plans" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="alert alert-info mt-3">
+                <i class="fas fa-shield-alt me-2"></i>
+                <strong>Secure Payment:</strong> Your payment information is encrypted and secure.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPaymentMethod(method) {
+        // Remove selected class from all methods
+        document.querySelectorAll('.payment-method').forEach(el => {
+            el.classList.remove('selected');
+        });
+
+        // Add selected class to clicked method
+        event.currentTarget.classList.add('selected');
+
+        // Check the corresponding radio button
+        document.getElementById(method).checked = true;
+    }
+
+    // Initialize first payment method as selected
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.payment-method').classList.add('selected');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Candidate Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 { text-align: center; margin-bottom: 25px; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        p a { display: block; text-align: center; margin-top: 20px; color: #4CAF50; text-decoration: none; }
+        p a:hover { text-decoration: underline; }
+        div[th\\:if="${message}"] { color: green; text-align: center; margin-bottom: 15px; }
+        div[th\\:if="${#fields.hasErrors('*')}"] { color: red; text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <form th:action="@{/candidates/register}" th:object="${candidate}" method="post" enctype="multipart/form-data">
+        <h2>Candidate Registration</h2>
+
+        <!-- Success message -->
+        <div th:if="${message}">
+            <p th:text="${message}"></p>
+        </div>
+
+        Full Name: <input type="text" th:field="*{fullName}" /><br/>
+        Email: <input type="email" th:field="*{email}" /><br/>
+        Phone Number: <input type="text" th:field="*{phoneNumber}" /><br/>
+        Alternate Phone: <input type="text" th:field="*{alternatePhoneNumber}" /><br/>
+        Password: <input type="password" th:field="*{password}" /><br/>
+        Confirm Password: <input type="password" th:field="*{confirmPassword}" /><br/>
+        Gender: 
+        <select th:field="*{gender}">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select><br/>
+        City: <input type="text" th:field="*{city}" /><br/>
+        State: <input type="text" th:field="*{state}" /><br/>
+        Highest Education: <input type="text" th:field="*{highestEducation}" /><br/>
+        College/University: <input type="text" th:field="*{collegeUniversity}" /><br/>
+        Year of Graduation: <input type="number" th:field="*{yearOfGraduation}" /><br/>
+        Skills: <input type="text" th:field="*{skills}" /><br/>
+        Experience (years): <input type="number" th:field="*{experience}" /><br/>
+
+        <!-- Resume upload field -->
+        Upload Resume: <input type="file" name="resumeFile" /><br/><br/>
+
+        <!-- Profile picture upload -->
+        Upload Profile Picture: <input type="file" name="profilePicFile" /><br/><br/>
+
+        <!-- Validation errors -->
+        <div th:if="${#fields.hasErrors('*')}">
+            <p th:each="err: ${#fields.errors('*')}" th:text="${err}"></p>
+        </div>
+
+        <button type="submit">Register</button>
+        <p><a th:href="@{/candidates/login}">Already registered? Login here</a></p>
+    </form>
+</body>
+</html>

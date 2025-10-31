@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Payment Gateway - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gateway-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .scenario-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .scenario-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .loading-spinner {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Gateway Header -->
+            <div class="gateway-header rounded-top p-4 text-center">
+                <h2><i class="fas fa-shield-alt me-2"></i>Secure Payment Gateway</h2>
+                <p class="mb-0">Demo Environment - For Testing Purposes Only</p>
+            </div>
+
+            <div class="card border-top-0">
+                <div class="card-body">
+                    <!-- Payment Details -->
+                    <div th:if="${payment}">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5>Merchant: VirtueHire</h5>
+                                <p class="mb-1"><strong>Order ID:</strong> <span th:text="${payment.paymentGatewayId}"></span></p>
+                                <p class="mb-1"><strong>Amount:</strong> ₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span></p>
+                                <p class="mb-0"><strong>Plan:</strong> <span th:text="${payment.planType}"></span></p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <div class="alert alert-info">
+                                    <small>
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        This is a mock payment gateway for demonstration purposes.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Test Scenarios -->
+                        <h5 class="mb-3">Select Test Scenario</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="card scenario-card border-success" onclick="selectScenario('SUCCESS')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                                        <h6>Successful Payment</h6>
+                                        <small class="text-muted">Simulate successful transaction</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card scenario-card border-danger" onclick="selectScenario('FAIL_INSUFFICIENT_FUNDS')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-times-circle text-danger fa-2x mb-2"></i>
+                                        <h6>Insufficient Funds</h6>
+                                        <small class="text-muted">Simulate declined transaction</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card scenario-card border-warning" onclick="selectScenario('FAIL_NETWORK_ERROR')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-wifi text-warning fa-2x mb-2"></i>
+                                        <h6>Network Error</h6>
+                                        <small class="text-muted">Simulate connection issues</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card scenario-card border-secondary" onclick="selectScenario('RANDOM')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-random text-secondary fa-2x mb-2"></i>
+                                        <h6>Random Outcome</h6>
+                                        <small class="text-muted">70% success, 30% failure</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Form -->
+                        <form th:action="@{/payments/process}" method="post" id="paymentForm">
+                            <input type="hidden" name="paymentGatewayId" th:value="${payment.paymentGatewayId}">
+                            <input type="hidden" name="paymentMethod" value="MOCK">
+                            <input type="hidden" name="scenario" id="scenarioInput" value="SUCCESS">
+
+                            <div class="mb-3">
+                                <label class="form-label">Card Number</label>
+                                <input type="text" class="form-control" value="4111 1111 1111 1111" readonly>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" value="12/25" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" value="123" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Cardholder Name</label>
+                                <input type="text" class="form-control" value="Demo User" readonly>
+                            </div>
+
+                            <!-- Selected Scenario Display -->
+                            <div class="alert alert-info" id="scenarioDisplay">
+                                <strong>Selected Scenario:</strong> <span id="scenarioText">Successful Payment</span>
+                            </div>
+
+                            <!-- Processing Animation -->
+                            <div class="loading-spinner text-center my-4" id="processingSpinner">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Processing...</span>
+                                </div>
+                                <p class="mt-2">Processing payment...</p>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2" id="actionButtons">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-lock me-2"></i>Process Payment
+                                </button>
+                                <a th:href="@{/payments/plans}" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Notice -->
+            <div class="alert alert-warning mt-3">
+                <h6><i class="fas fa-flask me-2"></i>Demo Environment Notice</h6>
+                <p class="mb-0">
+                    This is a simulated payment gateway for testing purposes. No real money will be charged.
+                    Use any of the test scenarios to see different payment outcomes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedScenario = 'SUCCESS';
+    const scenarioTexts = {
+        'SUCCESS': 'Successful Payment',
+        'FAIL_INSUFFICIENT_FUNDS': 'Insufficient Funds - Transaction Failed',
+        'FAIL_NETWORK_ERROR': 'Network Error - Transaction Failed',
+        'RANDOM': 'Random Outcome (70% Success Rate)'
+    };
+
+    function selectScenario(scenario) {
+        selectedScenario = scenario;
+        document.getElementById('scenarioInput').value = scenario;
+        document.getElementById('scenarioText').textContent = scenarioTexts[scenario];
+
+        // Update card borders
+        document.querySelectorAll('.scenario-card').forEach(card => {
+            card.style.border = '1px solid #dee2e6';
+        });
+        event.currentTarget.style.border = '2px solid #007bff';
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Show processing spinner
+        document.getElementById('processingSpinner').style.display = 'block';
+        document.getElementById('actionButtons').style.display = 'none';
+
+        // Simulate processing delay
+        setTimeout(() => {
+            this.submit();
+        }, 2000);
+    });
+
+    // Initialize first scenario as selected
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.scenario-card').style.border = '2px solid #007bff';
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

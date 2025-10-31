@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Candidate Welcome</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f8; margin: 0; padding: 20px; }
+        .welcome-container { background-color: #fff; padding: 30px 40px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); max-width: 800px; margin: auto; }
+        h2 { color: #333; margin-bottom: 10px; }
+        .profile-section { text-align: center; margin-bottom: 20px; }
+        .profile-section img.profile-pic { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #4CAF50; }
+        .badge-text { margin-top: 10px; display: inline-block; background-color: #FFD700; color: #333; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.9em; }
+        a { display: inline-block; margin: 5px; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        .btn-logout { background-color: #4CAF50; color: white; margin-top: 20px; }
+        .btn-logout:hover { background-color: #45a049; }
+        .btn-assessment { background-color: #2196F3; color: white; }
+        .btn-assessment:hover { background-color: #1976D2; }
+        .btn-completed { background-color: #aaa; cursor: not-allowed; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #2196F3; color: white; }
+        td { color: #333; }
+    </style>
+</head>
+<body>
+<div class="welcome-container">
+
+    <!-- Profile Picture + Badge -->
+    <div class="profile-section">
+        <img th:if="${session.candidate.profilePic != null}"
+             th:src="@{'/uploads/' + ${session.candidate.profilePic}}"
+             alt="Profile Picture"
+             class="profile-pic"
+             onerror="this.onerror=null;this.src='/images/default-profile.png'">
+
+        <img th:if="${session.candidate.profilePic == null}"
+             src="/images/default-profile.png"
+             alt="Default Profile Picture"
+             class="profile-pic">
+
+        <!-- Badge placed below profile picture -->
+        <div th:if="${session.candidate.badge == 'Java Expert'}" style="margin-top: 10px; text-align: center;">
+            <img src="/images/java-expert-badge.jpg" alt="Java Expert Badge" style="width: 80px; height: auto; border-radius: 8px; box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);">
+        </div>
+
+        <!-- Show badge TEXT if badge is something else -->
+        <p th:if="${session.candidate.badge != null and session.candidate.badge != 'Java Expert'}"
+           class="badge-text"
+           th:text="${session.candidate.badge}"></p>
+    </div>
+
+    <!-- Email -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h2>Welcome, 
+            <span th:text="${session.candidate.email}">candidate@example.com</span>
+        </h2>
+        <p>Email: <span th:text="${session.candidate.email}">candidate@example.com</span></p>
+    </div>
+
+    <!-- Assessment Buttons -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a th:href="@{/assessment/level/1}"
+           th:classappend="${attemptedLevels.contains(1)} ? ' btn-completed' : ' btn-assessment'"
+           th:text="${attemptedLevels.contains(1)} ? 'Level 1 Completed' : 'Level 1 Assessment'"></a>
+
+        <a th:href="@{/assessment/level/2}"
+           th:classappend="${attemptedLevels.contains(2)} ? ' btn-completed' : ' btn-assessment'"
+           th:text="${attemptedLevels.contains(2)} ? 'Level 2 Completed' : 'Level 2 Assessment'"></a>
+
+        <a th:href="@{/assessment/level/3}"
+           th:classappend="${attemptedLevels.contains(3)} ? ' btn-completed' : ' btn-assessment'"
+           th:text="${attemptedLevels.contains(3)} ? 'Level 3 Completed' : 'Level 3 Assessment'"></a>
+    </div>
+
+    <!-- Assessment Results -->
+    <h3>Assessment Results</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Level</th>
+            <th>Score</th>
+            <th>Date & Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="res : ${results}">
+            <td th:text="${res.level}">1</td>
+            <td th:text="${res.score + '%'}">0%</td>
+            <td th:text="${#temporals.format(res.attemptedAt,'dd-MM-yyyy HH:mm')}">01-01-2025 12:00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="text-align: center;">
+        <a th:href="@{/candidates/logout}" class="btn-logout">Logout</a>
+    </div>
+</div>
+</body>
+</html>

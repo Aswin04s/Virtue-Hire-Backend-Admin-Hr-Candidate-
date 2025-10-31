@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Candidates - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Browse Candidates</h2>
+
+    <!-- Current Plan Alert -->
+    <div class="alert alert-info">
+        <strong>Current Plan:</strong>
+        <span th:if="${hr.planType == null}">No Active Plan</span>
+        <span th:if="${hr.planType == 'MONTHLY_UNLIMITED'}">
+            Monthly Unlimited (Expires: <span th:text="${#temporals.format(hr.planExpiryDate, 'dd-MM-yyyy')}"></span>)
+        </span>
+        <span th:if="${hr.planType == 'TEN_CANDIDATES'}">
+            10 Candidates Plan (<span th:text="${hr.remainingViews}"></span> views remaining)
+        </span>
+        <span th:if="${hr.planType == 'SINGLE_CANDIDATE'}">
+            Single Candidate Plan (<span th:text="${hr.remainingViews}"></span> view remaining)
+        </span>
+        <a href="/payments/plans" class="btn btn-sm btn-primary ms-3">Purchase/Upgrade Plan</a>
+    </div>
+
+    <!-- ===== SIMPLIFIED SEARCH FORM ===== -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🔍 Search Candidates</h5>
+        </div>
+        <div class="card-body">
+            <form action="/hrs/searchCandidates" method="get" class="row g-3">
+                <!-- Skills Filter -->
+                <div class="col-md-5">
+                    <label for="skills" class="form-label">Skills</label>
+                    <input type="text" class="form-control" id="skills" name="skills"
+                           th:value="${searchSkills}"
+                           placeholder="e.g., Java, Spring Boot, React">
+                    <small class="text-muted">Enter keywords separated by commas</small>
+                </div>
+
+                <!-- Experience Level Filter -->
+                <div class="col-md-3">
+                    <label for="experienceLevel" class="form-label">Experience Level</label>
+                    <select class="form-control" id="experienceLevel" name="experienceLevel">
+                        <option value="All" th:selected="${experienceLevel == null or experienceLevel == 'All'}">
+                            All
+                        </option>
+                        <option value="Fresher" th:selected="${experienceLevel == 'Fresher'}">
+                            Fresher (0-1 years)
+                        </option>
+                        <option value="Experienced" th:selected="${experienceLevel == 'Experienced'}">
+                            Experienced (2+ years)
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Min Score Filter -->
+                <div class="col-md-2">
+                    <label for="minScore" class="form-label">Min Score (%)</label>
+                    <input type="number" class="form-control" id="minScore" name="minScore"
+                           th:value="${minScore}"
+                           min="0" max="100" placeholder="0">
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        Search
+                    </button>
+                    <a href="/hrs/candidates" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="alert alert-secondary">
+        Found <strong th:text="${#lists.size(candidates)}"></strong> candidate(s)
+    </div>
+
+    <!-- Candidates Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Skills</th>
+                <th>Experience</th>
+                <th>Score</th>
+                <th>Badge</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="candidate : ${candidates}">
+                <td th:text="${candidate.id}"></td>
+                <td th:text="${candidate.fullName}"></td>
+                <td th:text="${candidate.email}"></td>
+                <td th:text="${candidate.skills}"></td>
+                <td th:text="${candidate.experience} + ' years'"></td>
+                <td>
+                        <span th:if="${candidate.score != null}"
+                              class="badge bg-info"
+                              th:text="${candidate.score} + '%'"></span>
+                    <span th:unless="${candidate.score != null}"
+                          class="text-muted">N/A</span>
+
+                </td>
+                <td>
+                    <span class="badge bg-success" th:text="${candidate.badge}"></span>
+                </td>
+                <td>
+                    <a th:href="@{/hrs/viewCandidateDetails/{id}(id=${candidate.id})}"
+                       class="btn btn-sm btn-success">
+                        View Details
+                    </a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(candidates)}">
+                <td colspan="8" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox"></i>
+                    <p class="mb-0">No candidates found matching your search criteria</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/hrs/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+</body>
+</html>

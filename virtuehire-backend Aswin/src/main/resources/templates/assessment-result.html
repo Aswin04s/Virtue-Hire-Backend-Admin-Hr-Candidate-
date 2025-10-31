@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assessment Result</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .result-container {
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .passed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .failed {
+            color: #f44336;
+            font-weight: bold;
+        }
+        a, button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            background-color: #2196F3;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        a:hover, button:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+<div class="result-container">
+    <h2>Assessment Result</h2>
+
+    <p>Level: <span th:text="${level}">1</span></p>
+    <p>Percentage: <span th:text="${score}">0</span>%</p>
+    <p>Status:
+        <span th:if="${passed}" class="passed">Passed</span>
+        <span th:if="${!passed}" class="failed">Failed</span>
+    </p>
+
+    <!-- Next Level if passed -->
+    <div th:if="${passed}">
+        <form th:action="@{/assessment/start}" method="get">
+            <button type="submit">Next Level</button>
+        </form>
+    </div>
+
+    <!-- Back to Candidate Welcome if failed -->
+    <div th:if="${!passed}">
+        <h3>Better luck next time!</h3>
+        <a th:href="@{/candidates/login}">Back to Home</a>
+    </div>
+</div>
+</body>
+</html>

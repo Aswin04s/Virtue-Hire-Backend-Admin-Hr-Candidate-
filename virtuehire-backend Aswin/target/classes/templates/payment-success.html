@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .success-animation {
+            animation: bounce 1s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <!-- Success Icon -->
+            <div class="success-animation mb-4">
+                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+            </div>
+
+            <!-- Success Message -->
+            <h1 class="text-success mb-3">Payment Successful!</h1>
+            <p class="lead mb-4">Thank you for your purchase. Your payment has been processed successfully.</p>
+
+            <!-- Payment Details -->
+            <div th:if="${paymentResult}">
+                <div class="card border-success mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Payment Details</h5>
+                        <div class="row text-start">
+                            <div class="col-6">
+                                <p><strong>Transaction ID:</strong></p>
+                                <p><strong>Amount Paid:</strong></p>
+                                <p><strong>Plan:</strong></p>
+                                <p><strong>Date:</strong></p>
+                            </div>
+                            <div class="col-6">
+                                <p th:text="${paymentResult.transactionId}"></p>
+                                <p>₹<span th:text="${#numbers.formatDecimal(paymentResult.payment.amount, 1, 2)}"></span></p>
+                                <p th:text="${paymentResult.payment.planType}"></p>
+                                <p th:text="${#temporals.format(paymentResult.payment.completedAt, 'dd MMM yyyy HH:mm')}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-rocket me-2"></i>What's Next?</h6>
+                <p class="mb-0">Your account has been upgraded. You can now access all the premium features immediately.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2 d-md-block">
+                <a href="/hrs/dashboard" class="btn btn-primary btn-lg me-md-2">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </a>
+                <a href="/payments/history" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-receipt me-2"></i>View Payment History
+                </a>
+            </div>
+
+            <!-- Support Info -->
+            <div class="mt-4">
+                <p class="text-muted">
+                    Need help? <a href="mailto:support@virtuehire.com">Contact our support team</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

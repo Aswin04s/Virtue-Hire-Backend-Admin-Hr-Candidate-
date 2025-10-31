@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .status-success { background-color: #d4edda; color: #155724; }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-failed { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="fas fa-crown me-2"></i>Admin Dashboard
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link active" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/hrs">HR Management</a>
+            <a class="nav-link" href="/admin/questions">Question Bank</a>
+            <a class="nav-link" href="/admin/candidates">Candidates</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid my-4">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title" th:text="${totalCandidates}">0</h5>
+                            <p class="card-text">Total Candidates</p>
+                        </div>
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title" th:text="${candidatesWithTest}">0</h5>
+                            <p class="card-text">Candidates Taken Test</p>
+                        </div>
+                        <i class="fas fa-clipboard-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title" th:text="${totalHrs}">0</h5>
+                            <p class="card-text">Total HRs</p>
+                        </div>
+                        <i class="fas fa-user-tie fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">₹<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}">0</span></h5>
+                            <p class="card-text">Total Revenue</p>
+                        </div>
+                        <i class="fas fa-money-bill-wave fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- HR Verification Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-check me-2"></i>
+                        HR Verification Queue
+                        <span class="badge bg-danger ms-2" th:text="${unverifiedHrs}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${unverifiedHrs == 0}" class="text-center text-muted py-3">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <p>No pending HR verifications</p>
+                    </div>
+                    <div th:if="${unverifiedHrs > 0}">
+                        <p class="text-muted">There are <strong th:text="${unverifiedHrs}"></strong> HRs waiting for verification.</p>
+                        <a href="/admin/hrs?filter=unverified" class="btn btn-warning btn-sm">
+                            Review Pending HRs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Payments -->
+            <div class="card mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-receipt me-2"></i>
+                        Recent Payments
+                        <span class="badge bg-light text-dark ms-2" th:text="${payments.size()}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${payments.empty}" class="text-center text-muted py-3">
+                        <p>No payments yet</p>
+                    </div>
+                    <div th:unless="${payments.empty}">
+                        <div th:each="payment : ${payments}" class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong th:text="${payment.hr.fullName}"></strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        ₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span> •
+                                        <span th:text="${payment.planType}"></span>
+                                    </small>
+                                </div>
+                                <small class="text-muted" th:text="${#temporals.format(payment.completedAt, 'dd MMM yyyy')}"></small>
+                            </div>
+                        </div>
+                        <!-- UPDATED: Dynamic View All Payments Button -->
+                        <div class="text-center mt-3">
+                            <a th:href="@{/admin/payments}" class="btn btn-outline-success btn-sm">
+                                View All Payments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-rocket me-2"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="/admin/hrs" class="btn btn-outline-primary w-100 h-100 py-3">
+                                <i class="fas fa-user-tie fa-2x mb-2"></i><br>
+                                Manage HRs
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/admin/questions" class="btn btn-outline-success w-100 h-100 py-3">
+                                <i class="fas fa-question-circle fa-2x mb-2"></i><br>
+                                Manage Questions
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/admin/candidates" class="btn btn-outline-info w-100 h-100 py-3">
+                                <i class="fas fa-users fa-2x mb-2"></i><br>
+                                View Candidates
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/admin/hrs?filter=unverified" class="btn btn-outline-warning w-100 h-100 py-3">
+                                <i class="fas fa-user-check fa-2x mb-2"></i><br>
+                                Verify HRs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        System Overview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <h4 th:text="${verifiedHrs}" class="text-success">0</h4>
+                            <small>Verified HRs</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 th:text="${unverifiedHrs}" class="text-warning">0</h4>
+                            <small>Pending HRs</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <h4 th:text="${candidatesWithTest}" class="text-primary">0</h4>
+                            <small>Tests Taken</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 th:text="${paymentStats.successfulPayments}" class="text-success">0</h4>
+                            <small>Successful Payments</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Candidates -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-graduate me-2"></i>
+                        Recent Candidates
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Skills</th>
+                                <th>Experience</th>
+                                <th>Score</th>
+                                <th>Badge</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="candidate : ${candidates}">
+                                <td th:text="${candidate.fullName}"></td>
+                                <td th:text="${candidate.email}"></td>
+                                <td>
+                                    <small th:text="${candidate.skills}"></small>
+                                </td>
+                                <td th:text="${candidate.experience} + ' years'"></td>
+                                <td>
+                                        <span th:if="${candidate.score != null}"
+                                              class="badge bg-info"
+                                              th:text="${candidate.score} + '%'"></span>
+                                    <span th:unless="${candidate.score != null}"
+                                          class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                        <span th:if="${candidate.badge != null}"
+                                              class="badge bg-success"
+                                              th:text="${candidate.badge}"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/candidates/{id}(id=${candidate.id})}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${candidates.empty}">
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x mb-2"></i>
+                                    <p>No candidates found</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

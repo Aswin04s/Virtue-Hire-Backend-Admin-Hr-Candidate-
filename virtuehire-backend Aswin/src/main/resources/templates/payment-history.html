@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History - VirtueHire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .status-success { background-color: #d4edda; color: #155724; }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-failed { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/hrs/dashboard">
+            <i class="fas fa-gem me-2"></i>VirtueHire
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/hrs/dashboard">Dashboard</a>
+            <a class="nav-link" href="/payments/plans">Plans</a>
+            <a class="nav-link active" href="/payments/history">Payment History</a>
+            <a class="nav-link" href="/hrs/logout">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-receipt me-2"></i>Payment History</h1>
+                <a href="/payments/plans" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Upgrade Plan
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${payments.size()}">0</h5>
+                            <p class="card-text">Total Payments</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${#aggregates.sum(payments.?[status.name() == 'SUCCESS'].![amount])} ?: 0">0</h5>
+                            <p class="card-text">Total Spent</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${payments.?[status.name() == 'SUCCESS'].size()}">0</h5>
+                            <p class="card-text">Successful</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${payments.?[status.name() == 'FAILED'].size()}">0</h5>
+                            <p class="card-text">Failed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Transactions</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${payments.empty}" class="text-center py-5">
+                        <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                        <h5>No payment history found</h5>
+                        <p class="text-muted">You haven't made any payments yet.</p>
+                        <a href="/payments/plans" class="btn btn-primary">View Plans</a>
+                    </div>
+
+                    <div th:unless="${payments.empty}" class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction ID</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="payment : ${payments}">
+                                <td th:text="${#temporals.format(payment.createdAt, 'dd MMM yyyy')}"></td>
+                                <td>
+                                    <small class="text-muted" th:text="${payment.paymentGatewayId}"></small>
+                                </td>
+                                <td th:text="${payment.planType}"></td>
+                                <td>₹<span th:text="${#numbers.formatDecimal(payment.amount, 1, 2)}"></span></td>
+                                <td th:text="${payment.paymentMethod}"></td>
+                                <td>
+                                            <span class="status-badge"
+                                                  th:classappend="${payment.status.name() == 'SUCCESS' ? 'status-success' :
+                       (payment.status.name() == 'PENDING' ? 'status-pending' : 'status-failed')}">
+    <span th:text="${payment.status}"></span>
+</span>
+
+                                </td>
+                                <td>
+                                    <a th:href="@{/payments/mock-gateway/{id}(id=${payment.id})}"
+                                       th:if="${payment.status.name() == 'PENDING'}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Retry
+                                    </a>
+                                    <span th:if="${payment.status.name() != 'PENDING'}" class="text-muted">-</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Option -->
+            <div class="text-end mt-3">
+                <button class="btn btn-outline-secondary">
+                    <i class="fas fa-download me-2"></i>Export as CSV
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+        <p>&copy; 2024 VirtueHire. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

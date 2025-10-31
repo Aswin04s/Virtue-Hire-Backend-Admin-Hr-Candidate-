@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>HR Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 { text-align: center; margin-bottom: 25px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background-color: #45a049; }
+        p a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        p a:hover { text-decoration: underline; }
+        .message { color: green; text-align: center; margin-bottom: 15px; }
+        .error { color: red; text-align: center; margin-bottom: 15px; }
+        .file-input { margin: 15px 0; }
+        .required { color: red; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form th:action="@{/hrs/register}" method="post" enctype="multipart/form-data">
+        <h2>HR Registration</h2>
+
+        <!-- Success message -->
+        <div th:if="${message}" class="message">
+            <p th:text="${message}"></p>
+        </div>
+
+        <!-- Error message -->
+        <div th:if="${error}" class="error">
+            <p th:text="${error}"></p>
+        </div>
+
+        <input type="text" name="fullName" placeholder="Full Name" required /><br/>
+        <input type="email" name="email" placeholder="Email" required /><br/>
+        <input type="text" name="phoneNumber" placeholder="Phone Number" required /><br/>
+        <input type="password" name="password" placeholder="Password" required /><br/>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" required /><br/>
+
+        <input type="text" name="companyName" placeholder="Company Name" required /><br/>
+        <input type="text" name="jobTitle" placeholder="Job Title" required /><br/>
+        <input type="text" name="companyWebsite" placeholder="Company Website" /><br/>
+        <input type="text" name="industry" placeholder="Industry" required /><br/>
+        <input type="text" name="city" placeholder="City" required /><br/>
+        <input type="text" name="state" placeholder="State" required /><br/>
+
+        <!-- ID proof upload -->
+        <div class="file-input">
+            <label>Upload ID Proof <span class="required">*</span></label><br>
+            <input type="file" name="idProof" accept=".jpg,.jpeg,.png,.pdf" required />
+            <small style="color: #666; font-size: 12px;">Accepted formats: JPG, PNG, PDF (Max: 5MB)</small>
+        </div>
+
+        <button type="submit">Register</button>
+        <p><a th:href="@{/hrs/login}">Already registered? Login here</a></p>
+    </form>
+</div>
+</body>
+</html>
