@@ -16,7 +16,7 @@
         <div class="navbar-nav ms-auto">
             <a class="nav-link" href="/admin/dashboard">Dashboard</a>
             <a class="nav-link" href="/admin/hrs">HR Management</a>
-            <a class="nav-link" href="/admin/questions">Question Bank</a>
+            <a class="nav-link active" href="/admin/questions">Question Bank</a>
             <a class="nav-link" href="/admin/candidates">Candidates</a>
         </div>
     </div>
@@ -25,7 +25,7 @@
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="fas fa-edit me-2"></i>Edit Question</h1>
-        <a href="/admin/questions" class="btn btn-secondary">
+        <a th:href="@{/admin/questions}" class="btn btn-secondary">
             <i class="fas fa-arrow-left me-2"></i>Back to Questions
         </a>
     </div>
@@ -41,21 +41,35 @@
         </div>
         <div class="card-body">
             <form th:action="@{/admin/questions/update/{id}(id=${question.id})}" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Level</label>
-                    <select class="form-select" name="level" required>
-                        <option value="1" th:selected="${question.level == 1}">Easy</option>
-                        <option value="2" th:selected="${question.level == 2}">Medium</option>
-                        <option value="3" th:selected="${question.level == 3}">Hard</option>
-                    </select>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Subject *</label>
+                            <input type="text" class="form-control" name="subject"
+                                   th:value="${question.subject}" required
+                                   placeholder="e.g., Java, React, Python">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Level *</label>
+                            <select class="form-select" name="level" required>
+                                <option value="1" th:selected="${question.level == 1}">Easy</option>
+                                <option value="2" th:selected="${question.level == 2}">Medium</option>
+                                <option value="3" th:selected="${question.level == 3}">Hard</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Question Text</label>
+                    <label class="form-label">Question Text *</label>
                     <textarea class="form-control" name="text" rows="3" required
                               th:text="${question.text}"></textarea>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Options</label>
+                    <label class="form-label">Options (4 required) *</label>
                     <div th:each="opt, stat : ${question.options}">
                         <input type="text" class="form-control mb-2"
                                th:name="options"
@@ -64,14 +78,17 @@
                                required>
                     </div>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Correct Answer</label>
+                    <label class="form-label">Correct Answer *</label>
                     <input type="text" class="form-control" name="correctAnswer"
                            th:value="${question.correctAnswer}"
                            required placeholder="Must match one of the options exactly">
+                    <div class="form-text">Make sure this exactly matches one of the options above</div>
                 </div>
+
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a href="/admin/questions" class="btn btn-secondary me-md-2">Cancel</a>
+                    <a th:href="@{/admin/questions}" class="btn btn-secondary me-md-2">Cancel</a>
                     <button type="submit" class="btn btn-primary">Update Question</button>
                 </div>
             </form>

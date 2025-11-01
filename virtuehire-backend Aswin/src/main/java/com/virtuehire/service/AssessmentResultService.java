@@ -31,6 +31,7 @@ public class AssessmentResultService {
         return hasAttempted(candidate.getId(), level);
     }
 
+    // In AssessmentResultService.java - Update the saveResult method
     public void saveResult(Candidate candidate, int level, int score) {
         if (hasAttempted(candidate, level)) return;
         AssessmentResult result = new AssessmentResult();
@@ -38,6 +39,12 @@ public class AssessmentResultService {
         result.setLevel(level);
         result.setScore(score);
         resultRepo.save(result);
+
+        // NEW: Update candidate's overall score if this is their highest score
+        if (candidate.getScore() == null || score > candidate.getScore()) {
+            candidate.setScore(score);
+            candidateRepo.save(candidate);
+        }
 
         if (level == 3) {
             calculateCumulativeAndAssignBadge(candidate);

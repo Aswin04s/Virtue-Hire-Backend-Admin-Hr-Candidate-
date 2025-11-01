@@ -54,15 +54,42 @@ public class Candidate {
     private Integer score;
     private String levelAttempted; // Basic/Intermediate/Advanced
 
+    private String idCardPath; // Store ID card file path
+    private Boolean approved = false; // Admin approval status
+    private String rejectionReason; // Reason if rejected
+
+    // Add file size validation fields
+    private static final long MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final long MAX_PROFILE_PIC_SIZE = 2 * 1024 * 1024; // 2MB
+    private static final long MAX_ID_CARD_SIZE = 5 * 1024 * 1024; // 5MB
+
     // Getters and setters for new fields
+    public String getIdCardPath() { return idCardPath; }
+    public void setIdCardPath(String idCardPath) { this.idCardPath = idCardPath; }
+
+    public Boolean getApproved() { return approved; }
+    public void setApproved(Boolean approved) { this.approved = approved; }
+
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
+    public static long getMaxResumeSize() { return MAX_RESUME_SIZE; }
+    public static long getMaxProfilePicSize() { return MAX_PROFILE_PIC_SIZE; }
+    public static long getIdCardSize() { return MAX_ID_CARD_SIZE; }
+
     public String getExperienceLevel() { return experienceLevel; }
     public void setExperienceLevel(String experienceLevel) { this.experienceLevel = experienceLevel; }
 
     public String getLanguagePreference() { return languagePreference; }
     public void setLanguagePreference(String languagePreference) { this.languagePreference = languagePreference; }
 
-    public Boolean getAssessmentTaken() { return assessmentTaken; }
-    public void setAssessmentTaken(Boolean assessmentTaken) { this.assessmentTaken = assessmentTaken; }
+    public Boolean getAssessmentTaken() {
+        return assessmentTaken != null ? assessmentTaken : false;
+    }
+
+    public void setAssessmentTaken(Boolean assessmentTaken) {
+        this.assessmentTaken = assessmentTaken;
+    }
 
     public Integer getScore() { return score; }
     public void setScore(Integer score) { this.score = score; }

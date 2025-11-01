@@ -15,6 +15,8 @@ public class Question {
     @Column(nullable = false)
     private int level;
 
+    private String subject;
+
     @Column(nullable = false, length = 1000)
     private String text;
 
@@ -32,7 +34,8 @@ public class Question {
     // ===== Constructors =====
     public Question() {}
 
-    public Question(int level, String text, List<String> options, String correctAnswer) {
+    public Question(String subject, int level, String text, List<String> options, String correctAnswer) {
+        this.subject = subject;
         this.level = level;
         this.text = text;
         this.options = options;
@@ -42,6 +45,9 @@ public class Question {
     // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getSubject() { return subject; }
+    public void setSubject(String subject) { this.subject = subject; }
 
     public int getLevel() { return level; }
     public void setLevel(int level) { this.level = level; }

@@ -109,9 +109,9 @@
                                   class="text-muted">-</span>
                         </td>
                         <td>
-                                <span th:if="${candidate.assessmentTaken}"
-                                      class="badge bg-success">Taken</span>
-                            <span th:unless="${candidate.assessmentTaken}"
+    <span th:if="${candidate.assessmentTaken != null && candidate.assessmentTaken}"
+          class="badge bg-success">Taken</span>
+                            <span th:if="${candidate.assessmentTaken == null || !candidate.assessmentTaken}"
                                   class="badge bg-secondary">Not Taken</span>
                         </td>
                         <td>

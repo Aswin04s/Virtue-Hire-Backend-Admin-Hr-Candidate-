@@ -20,6 +20,10 @@ public class CandidateService {
         this.assessmentResultRepo = assessmentResultRepo;
     }
 
+    public Optional<Candidate> findByEmail(String email) {
+        return repo.findByEmail(email);
+    }
+
     // Save candidate
     public Candidate save(Candidate c) {
         return repo.save(c);
@@ -35,7 +39,8 @@ public class CandidateService {
         Optional<Candidate> optionalCandidate = repo.findByEmail(email);
         if (optionalCandidate.isPresent()) {
             Candidate candidate = optionalCandidate.get();
-            if (candidate.getPassword().equals(password)) {
+            // Check if candidate is approved AND password matches
+            if (candidate.getPassword().equals(password) && candidate.getApproved()) {
                 return candidate;
             }
         }
@@ -68,6 +73,19 @@ public class CandidateService {
         // You might want to get the latest assessment score
         // For now, using experience as a placeholder for score
         return candidate.getScore(); // Replace with actual score logic
+    }
+
+    // Find candidates by approval status
+    public List<Candidate> findByApprovedFalse() {
+        return repo.findAll().stream()
+                .filter(c -> !c.getApproved())
+                .collect(Collectors.toList());
+    }
+
+    public List<Candidate> findByApprovedTrue() {
+        return repo.findAll().stream()
+                .filter(c -> c.getApproved())
+                .collect(Collectors.toList());
     }
 
     // Create comparator for sorting

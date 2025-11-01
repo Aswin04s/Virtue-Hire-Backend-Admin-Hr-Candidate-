@@ -3,6 +3,7 @@ package com.virtuehire.controller;
 import com.virtuehire.model.Candidate;
 import com.virtuehire.model.Question;
 import com.virtuehire.service.AssessmentResultService;
+import com.virtuehire.service.CandidateService; // ADD THIS IMPORT
 import com.virtuehire.service.QuestionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -19,20 +20,23 @@ public class AssessmentController {
 
     private final QuestionService questionService;
     private final AssessmentResultService resultService;
+    private final CandidateService candidateService; // ADD THIS
 
     private static final int MAX_LEVELS = 5; // adjust to your total levels
 
     public AssessmentController(QuestionService questionService,
-                                AssessmentResultService resultService) {
+                                AssessmentResultService resultService,
+                                CandidateService candidateService) { // ADD candidateService parameter
         this.questionService = questionService;
         this.resultService = resultService;
+        this.candidateService = candidateService; // INITIALIZE IT
     }
 
     // Assessment home page
     @GetMapping
     public String assessmentHome(HttpSession session, Model model) {
         Candidate candidate = (Candidate) session.getAttribute("candidate");
-        if (candidate == null) return "redirect:/login";
+        if (candidate == null) return "redirect:/candidates/login"; // FIXED: redirect to candidate login
 
         // Load all results from DB
         Map<Integer, Boolean> levelResults = resultService.getLevelResults(candidate);
@@ -65,7 +69,7 @@ public class AssessmentController {
     @GetMapping("/start")
     public String startAssessment(HttpSession session, Model model) {
         Candidate candidate = (Candidate) session.getAttribute("candidate");
-        if (candidate == null) return "redirect:/login";
+        if (candidate == null) return "redirect:/candidates/login"; // FIXED: redirect to candidate login
 
         Integer currentLevel = (Integer) session.getAttribute("currentLevel");
         if (currentLevel == null) currentLevel = 1;
@@ -89,7 +93,7 @@ public class AssessmentController {
     @GetMapping("/level/{level}")
     public String getLevel(@PathVariable int level, HttpSession session, Model model) {
         Candidate candidate = (Candidate) session.getAttribute("candidate");
-        if (candidate == null) return "redirect:/login";
+        if (candidate == null) return "redirect:/candidates/login"; // FIXED: redirect to candidate login
 
         // Prevent retake
         if (resultService.hasAttempted(candidate, level)) {
@@ -111,7 +115,7 @@ public class AssessmentController {
         return "assessment-level";
     }
 
-    // Submit answers for a level
+    // Submit answers for a level - UPDATED THIS METHOD
     @PostMapping("/submit/{level}")
     public String submitLevel(@PathVariable int level,
                               @RequestParam Map<String, String> answers,
@@ -119,7 +123,7 @@ public class AssessmentController {
                               Model model) {
 
         Candidate candidate = (Candidate) session.getAttribute("candidate");
-        if (candidate == null) return "redirect:/login";
+        if (candidate == null) return "redirect:/candidates/login"; // FIXED: redirect to candidate login
 
         // Prevent double submit
         if (resultService.hasAttempted(candidate, level)) {
@@ -133,8 +137,15 @@ public class AssessmentController {
         int total = (Integer) result.get("total");
         boolean passed = (Boolean) result.get("passed");
 
+        // NEW: Set assessmentTaken to true and update candidate
+        candidate.setAssessmentTaken(true);
+        candidateService.save(candidate); // Save the updated candidate
+
         // Save result in DB
         resultService.saveResult(candidate, level, score);
+
+        // Update session with the latest candidate data
+        session.setAttribute("candidate", candidate);
 
         // Update session results from DB
         Map<Integer, Boolean> updatedResults = resultService.getLevelResults(candidate);

@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/candidates")
@@ -47,9 +48,26 @@ public class CandidateController {
     public String register(@ModelAttribute Candidate candidate,
                            @RequestParam("resumeFile") MultipartFile resumeFile,
                            @RequestParam("profilePicFile") MultipartFile profilePicFile,
+                           @RequestParam("idCardFile") MultipartFile idCardFile, // New field
                            Model model) throws IOException {
 
         if (!Files.exists(uploadDir)) Files.createDirectories(uploadDir);
+
+        // File size validation
+        if (resumeFile.getSize() > Candidate.getMaxResumeSize()) {
+            model.addAttribute("error", "Resume file size must be less than 5MB");
+            return "candidate-form";
+        }
+
+        if (profilePicFile.getSize() > Candidate.getMaxProfilePicSize()) {
+            model.addAttribute("error", "Profile picture size must be less than 2MB");
+            return "candidate-form";
+        }
+
+        if (idCardFile.getSize() > Candidate.getIdCardSize()) {
+            model.addAttribute("error", "ID card file size must be less than 5MB");
+            return "candidate-form";
+        }
 
         // Save resume
         if (!resumeFile.isEmpty()) {
@@ -67,10 +85,22 @@ public class CandidateController {
             candidate.setProfilePic(profileFileName);
         }
 
+        // Save ID card (required for verification)
+        if (!idCardFile.isEmpty()) {
+            String idCardFileName = System.currentTimeMillis() + "_" + idCardFile.getOriginalFilename();
+            Path idCardPath = uploadDir.resolve(idCardFileName);
+            idCardFile.transferTo(idCardPath.toFile());
+            candidate.setIdCardPath(idCardFileName);
+        } else {
+            model.addAttribute("error", "ID card is required for verification");
+            return "candidate-form";
+        }
+
+        candidate.setApproved(false); // Default to not approved
         candidateService.save(candidate);
 
-        model.addAttribute("message", "Candidate registered successfully!");
-        model.addAttribute("candidate", new Candidate()); // reset form
+        model.addAttribute("message", "Registration successful! Please wait for admin verification. You will be able to login once your ID card is verified.");
+        model.addAttribute("candidate", new Candidate());
         return "candidate-form";
     }
 
@@ -104,44 +134,58 @@ public class CandidateController {
                         HttpSession session,
                         Model model) {
 
-        Candidate candidate = candidateService.login(email, password);
-        if (candidate != null) {
-            // Store candidate in session
-            session.setAttribute("candidate", candidate);
+        Optional<Candidate> candidateOptional = candidateService.findByEmail(email);
 
-            model.addAttribute("name", candidate.getFullName());
-            model.addAttribute("badge", candidate.getBadge());
-            model.addAttribute("profilePic", candidate.getProfilePic());
+        if (candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
 
-            // Load assessment results
-            List<AssessmentResult> results = assessmentResultService.getCandidateResults(candidate.getId());
-            model.addAttribute("results", results);
-
-            // Level-wise marks
-            model.addAttribute("levelMarks", results.stream()
-                    .collect(java.util.stream.Collectors.toMap(AssessmentResult::getLevel, AssessmentResult::getScore)));
-
-            // Attempted levels
-            List<Integer> attemptedLevels = results.stream()
-                    .map(AssessmentResult::getLevel)
-                    .toList();
-            model.addAttribute("attemptedLevels", attemptedLevels);
-
-            // ✅ Assign badge if all 3 levels completed and passed
-            boolean allPassed = attemptedLevels.contains(1) && attemptedLevels.contains(2) && attemptedLevels.contains(3)
-                                && assessmentResultService.hasPassed(candidate, 1)
-                                && assessmentResultService.hasPassed(candidate, 2)
-                                && assessmentResultService.hasPassed(candidate, 3);
-
-            if (allPassed && (candidate.getBadge() == null || candidate.getBadge().isEmpty())) {
-                candidate.setBadge("Java Expert"); // set desired badge
-                candidateService.save(candidate);   // save updated candidate
-                model.addAttribute("badge", candidate.getBadge());
+            // Check if candidate is approved
+            if (!candidate.getApproved()) {
+                model.addAttribute("error", "Your account is pending admin verification. Please wait for approval.");
+                return "candidate-login";
             }
 
-            return "candidate-welcome";
+            // Check password
+            if (candidate.getPassword().equals(password)) {
+                // Login successful - existing code
+                session.setAttribute("candidate", candidate);
+                model.addAttribute("name", candidate.getFullName());
+                model.addAttribute("badge", candidate.getBadge());
+                model.addAttribute("profilePic", candidate.getProfilePic());
+
+                // Load assessment results
+                List<AssessmentResult> results = assessmentResultService.getCandidateResults(candidate.getId());
+                model.addAttribute("results", results);
+
+                // Level-wise marks
+                model.addAttribute("levelMarks", results.stream()
+                        .collect(java.util.stream.Collectors.toMap(AssessmentResult::getLevel, AssessmentResult::getScore)));
+
+                // Attempted levels
+                List<Integer> attemptedLevels = results.stream()
+                        .map(AssessmentResult::getLevel)
+                        .toList();
+                model.addAttribute("attemptedLevels", attemptedLevels);
+
+                // ✅ Assign badge if all 3 levels completed and passed
+                boolean allPassed = attemptedLevels.contains(1) && attemptedLevels.contains(2) && attemptedLevels.contains(3)
+                        && assessmentResultService.hasPassed(candidate, 1)
+                        && assessmentResultService.hasPassed(candidate, 2)
+                        && assessmentResultService.hasPassed(candidate, 3);
+
+                if (allPassed && (candidate.getBadge() == null || candidate.getBadge().isEmpty())) {
+                    candidate.setBadge("Java Expert");
+                    candidateService.save(candidate);
+                    model.addAttribute("badge", candidate.getBadge());
+                }
+
+                return "candidate-welcome";
+            } else {
+                model.addAttribute("error", "Invalid password");
+                return "candidate-login";
+            }
         } else {
-            model.addAttribute("error", "Invalid credentials");
+            model.addAttribute("error", "No candidate found with this email");
             return "candidate-login";
         }
     }

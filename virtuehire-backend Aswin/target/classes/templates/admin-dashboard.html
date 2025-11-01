@@ -90,9 +90,10 @@
     </div>
 
     <div class="row">
-        <!-- HR Verification Section -->
+        <!-- Left Column: Verification Queues -->
         <div class="col-md-6">
-            <div class="card">
+            <!-- HR Verification Section -->
+            <div class="card mb-4">
                 <div class="card-header bg-warning text-dark">
                     <h5 class="mb-0">
                         <i class="fas fa-user-check me-2"></i>
@@ -114,8 +115,31 @@
                 </div>
             </div>
 
+            <!-- NEW: Candidate Verification Section -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-graduate me-2"></i>
+                        Candidate Verification Queue
+                        <span class="badge bg-warning ms-2" th:text="${pendingCandidates}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${pendingCandidates == 0}" class="text-center text-muted py-3">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <p>No pending candidate verifications</p>
+                    </div>
+                    <div th:if="${pendingCandidates > 0}">
+                        <p class="text-muted">There are <strong th:text="${pendingCandidates}"></strong> candidates waiting for ID verification.</p>
+                        <a href="/admin/candidates/pending" class="btn btn-danger btn-sm">
+                            <i class="fas fa-id-card me-1"></i>Verify Candidates
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Recent Payments -->
-            <div class="card mt-4">
+            <div class="card">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-receipt me-2"></i>
@@ -141,7 +165,6 @@
                                 <small class="text-muted" th:text="${#temporals.format(payment.completedAt, 'dd MMM yyyy')}"></small>
                             </div>
                         </div>
-                        <!-- UPDATED: Dynamic View All Payments Button -->
                         <div class="text-center mt-3">
                             <a th:href="@{/admin/payments}" class="btn btn-outline-success btn-sm">
                                 View All Payments
@@ -152,8 +175,9 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
+        <!-- Right Column: Quick Actions & System Status -->
         <div class="col-md-6">
+            <!-- Quick Actions -->
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
@@ -182,9 +206,9 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/admin/hrs?filter=unverified" class="btn btn-outline-warning w-100 h-100 py-3">
+                            <a th:href="@{/admin/candidates/pending}" class="btn btn-outline-danger w-100 h-100 py-3">
                                 <i class="fas fa-user-check fa-2x mb-2"></i><br>
-                                Verify HRs
+                                Verify Candidates
                             </a>
                         </div>
                     </div>
@@ -201,24 +225,32 @@
                 </div>
                 <div class="card-body">
                     <div class="row text-center">
-                        <div class="col-6 border-end">
+                        <div class="col-4 border-end">
                             <h4 th:text="${verifiedHrs}" class="text-success">0</h4>
                             <small>Verified HRs</small>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4 border-end">
                             <h4 th:text="${unverifiedHrs}" class="text-warning">0</h4>
                             <small>Pending HRs</small>
+                        </div>
+                        <div class="col-4">
+                            <h4 th:text="${pendingCandidates}" class="text-danger">0</h4>
+                            <small>Pending Candidates</small>
                         </div>
                     </div>
                     <hr>
                     <div class="row text-center">
-                        <div class="col-6 border-end">
+                        <div class="col-4 border-end">
                             <h4 th:text="${candidatesWithTest}" class="text-primary">0</h4>
                             <small>Tests Taken</small>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4 border-end">
                             <h4 th:text="${paymentStats.successfulPayments}" class="text-success">0</h4>
                             <small>Successful Payments</small>
+                        </div>
+                        <div class="col-4">
+                            <h4 th:text="${totalCandidates}" class="text-info">0</h4>
+                            <small>Total Candidates</small>
                         </div>
                     </div>
                 </div>
@@ -247,6 +279,7 @@
                                 <th>Experience</th>
                                 <th>Score</th>
                                 <th>Badge</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -271,6 +304,10 @@
                                               th:text="${candidate.badge}"></span>
                                 </td>
                                 <td>
+                                    <span th:if="${candidate.approved}" class="badge bg-success">Approved</span>
+                                    <span th:unless="${candidate.approved}" class="badge bg-warning">Pending</span>
+                                </td>
+                                <td>
                                     <a th:href="@{/admin/candidates/{id}(id=${candidate.id})}"
                                        class="btn btn-sm btn-outline-primary">
                                         View Details
@@ -278,7 +315,7 @@
                                 </td>
                             </tr>
                             <tr th:if="${candidates.empty}">
-                                <td colspan="7" class="text-center text-muted py-4">
+                                <td colspan="8" class="text-center text-muted py-4">
                                     <i class="fas fa-inbox fa-2x mb-2"></i>
                                     <p>No candidates found</p>
                                 </td>

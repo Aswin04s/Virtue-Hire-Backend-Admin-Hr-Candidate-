@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Candidates - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="fas fa-crown me-2"></i>Admin Panel
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+            <a class="nav-link" href="/admin/hrs">HR Management</a>
+            <a class="nav-link" href="/admin/questions">Question Bank</a>
+            <a class="nav-link active" href="/admin/candidates">Candidates</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-user-clock me-2"></i>Pending Candidate Verification</h1>
+        <a href="/admin/candidates" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to All Candidates
+        </a>
+    </div>
+
+    <!-- Messages -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Pending Candidates -->
+    <div class="card">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                Candidates Waiting for Verification
+                <span class="badge bg-danger ms-2" th:text="${candidates.size()}">0</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div th:if="${candidates.empty}" class="text-center text-muted py-4">
+                <i class="fas fa-check-circle fa-2x mb-2"></i>
+                <p>No pending candidate verifications</p>
+            </div>
+
+            <div th:unless="${candidates.empty}" class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>College/University</th>
+                        <th>Graduation Year</th>
+                        <th>ID Card</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="candidate : ${candidates}">
+                        <td th:text="${candidate.id}"></td>
+                        <td th:text="${candidate.fullName}"></td>
+                        <td th:text="${candidate.email}"></td>
+                        <td th:text="${candidate.phoneNumber}"></td>
+                        <td th:text="${candidate.collegeUniversity}"></td>
+                        <td th:text="${candidate.yearOfGraduation}"></td>
+                        <td>
+                            <a th:if="${candidate.idCardPath != null}"
+                               th:href="@{/candidates/file/{filename}(filename=${candidate.idCardPath})}"
+                               target="_blank"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye me-1"></i>View ID
+                            </a>
+                            <span th:if="${candidate.idCardPath == null}" class="text-muted">No ID</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <form th:action="@{/admin/candidates/approve/{id}(id=${candidate.id})}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check me-1"></i>Approve
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#rejectModal'+${candidate.id}">
+                                    <i class="fas fa-times me-1"></i>Reject
+                                </button>
+                            </div>
+
+                            <!-- Reject Modal -->
+                            <div class="modal fade" th:id="'rejectModal'+${candidate.id}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Reject Candidate</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Reject <strong th:text="${candidate.fullName}"></strong>?</p>
+                                            <form th:action="@{/admin/candidates/reject/{id}(id=${candidate.id})}"
+                                                  method="post" id="rejectForm">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Reason for rejection:</label>
+                                                    <textarea class="form-control" name="reason" rows="3"
+                                                              placeholder="Enter reason for rejection..." required></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" form="rejectForm" class="btn btn-danger">Reject Candidate</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

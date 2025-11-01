@@ -5,70 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54b1ca6e-5024-4f88-a675-b8641daf015c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/VirtueHireApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/VirtueHireApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/DataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/DataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/AssessmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/AssessmentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/CandidateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/CandidateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/HrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/controller/HrController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/DataLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/VirtueHireApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AdminController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AssessmentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/CandidateController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/HrController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/PaymentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/AssessmentResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Candidate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Hr.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Payment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/PaymentStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Question.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/AssessmentResultRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/CandidateRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/HrRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/PaymentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/QuestionRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/AssessmentResultService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/CandidateService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/HrService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/PaymentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/QuestionService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/static/images/java-expert-badge.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-candidate-details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-candidates-list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-payments-list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-payments.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/assessment-complete.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/assessment-home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/assessment-level.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/assessment-result.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-profile-basic.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-profile-full.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-welcome.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/hr-dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/hr-form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/hr-list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/hr-login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/hr-welcome.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/mock-payment-gateway.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/payment-checkout.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/payment-failed.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/payment-history.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/payment-plans.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/payment-success.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-edit.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-management.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/uploads/1759837027666_RESUME SAMPLE.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/uploads/1760710519987_Screenshot 2025-09-22 220309.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/uploads/1761847469364_unnamed.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/uploads/RESUME SAMPLE.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/virtuehire-payment" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/model/Candidate.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/model/Candidate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/model/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/model/Question.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/repository/QuestionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/repository/QuestionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/AssessmentResultService.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/AssessmentResultService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/CandidateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/CandidateService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/QuestionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/java/com/virtuehire/service/QuestionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/admin-candidates-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/admin-candidates-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/admin-dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/admin-dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/candidate-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/candidate-form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/question-edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/question-edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/question-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/src/main/resources/templates/question-management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/DataLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/DataLoader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AssessmentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/AssessmentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/CandidateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/controller/CandidateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Candidate.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Candidate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Question.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/model/Question.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/QuestionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/repository/QuestionRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/AssessmentResultService.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/AssessmentResultService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/CandidateService.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/CandidateService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/QuestionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/com/virtuehire/service/QuestionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-candidates-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-candidates-list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/admin-dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/candidate-form.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-management.html" beforeDir="false" afterPath="$PROJECT_DIR$/virtuehire-backend Aswin/target/classes/templates/question-management.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +68,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -112,27 +81,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.VirtueHireApplication.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/aswin/Desktop/Virtue Hire&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.VirtueHireApplication.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "aswin",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/aswin/Downloads/Virtue Hire",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PLAIN_TEXT&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PLAIN_TEXT"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\aswin\Desktop\Virtue Hire" />

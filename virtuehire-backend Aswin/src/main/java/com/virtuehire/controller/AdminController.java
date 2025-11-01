@@ -56,6 +56,9 @@ public class AdminController {
                 .filter(c -> c.getAssessmentTaken() != null && c.getAssessmentTaken())
                 .count();
 
+        // NEW: Pending candidate verifications
+        long pendingCandidates = candidateService.findByApprovedFalse().size();
+
         // Payment Statistics
         Map<String, Object> paymentStats = paymentService.getPaymentStatistics();
 
@@ -78,11 +81,13 @@ public class AdminController {
         model.addAttribute("unverifiedHrs", unverifiedHrs);
         model.addAttribute("totalCandidates", totalCandidates);
         model.addAttribute("candidatesWithTest", candidatesWithTest);
+        model.addAttribute("pendingCandidates", pendingCandidates); // NEW
         model.addAttribute("paymentStats", paymentStats);
         model.addAttribute("totalRevenue", totalRevenue);
 
         return "admin-dashboard";
     }
+
 
     // Show all HRs for verification
     @GetMapping("/hrs")
@@ -107,6 +112,49 @@ public class AdminController {
         model.addAttribute("hrs", hrs);
         model.addAttribute("currentFilter", filter);
         return "hr-list";
+    }
+    // Show unapproved candidates for verification
+    @GetMapping("/candidates/pending")
+    public String showPendingCandidates(Model model) {
+        List<Candidate> pendingCandidates = candidateService.findByApprovedFalse();
+        model.addAttribute("candidates", pendingCandidates);
+        return "admin-pending-candidates";
+    }
+
+    // Approve candidate
+    @PostMapping("/candidates/approve/{id}")
+    public String approveCandidate(@PathVariable Long id, Model model) {
+        Candidate candidate = candidateService.findById(id).orElse(null);
+        if (candidate != null) {
+            // More flexible graduation year check
+            int currentYear = java.time.Year.now().getValue();
+            if (candidate.getYearOfGraduation() != null && candidate.getYearOfGraduation() <= currentYear + 1) {
+                candidate.setApproved(true);
+                candidateService.save(candidate);
+                model.addAttribute("message", "Candidate approved successfully!");
+            } else {
+                model.addAttribute("error", "Candidate graduation year appears invalid. Please verify ID card.");
+            }
+        } else {
+            model.addAttribute("error", "Candidate not found!");
+        }
+        return "redirect:/admin/candidates/pending";
+    }
+
+    // Reject candidate with reason
+    @PostMapping("/candidates/reject/{id}")
+    public String rejectCandidate(@PathVariable Long id,
+                                  @RequestParam String reason,
+                                  Model model) {
+        Candidate candidate = candidateService.findById(id).orElse(null);
+        if (candidate != null) {
+            candidate.setRejectionReason(reason);
+            candidateService.save(candidate);
+            model.addAttribute("message", "Candidate rejected. Reason: " + reason);
+        } else {
+            model.addAttribute("error", "Candidate not found!");
+        }
+        return "redirect:/admin/candidates/pending";
     }
 
     // Verify HR
@@ -140,25 +188,38 @@ public class AdminController {
     }
 
     // Question Management
+    // Question Management with subject filter
     @GetMapping("/questions")
-    public String questionManagement(Model model) {
-        // FIXED: Use existing method instead of getAllQuestions()
-        List<Question> questions = questionService.getAllQuestionsFromRepository();
+    public String questionManagement(
+            @RequestParam(required = false) String subject,
+            Model model) {
+
+        List<Question> questions;
+        if (subject != null && !subject.trim().isEmpty()) {
+            questions = questionService.getQuestionsBySubject(subject);
+        } else {
+            questions = questionService.getAllQuestionsFromRepository();
+        }
+
+        // Get all available subjects for dropdown
+        List<String> subjects = questionService.getAllSubjects();
+
         model.addAttribute("questions", questions);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("selectedSubject", subject);
         model.addAttribute("newQuestion", new Question());
         return "question-management";
     }
 
-    // Add new question
+    // Add new question with subject
     @PostMapping("/questions/add")
     public String addQuestion(@ModelAttribute Question question,
                               @RequestParam List<String> options,
                               Model model) {
         question.setOptions(options);
-        // FIXED: Use repository directly for saving
         questionService.saveQuestionViaRepository(question);
         model.addAttribute("message", "Question added successfully!");
-        return "redirect:/admin/questions";
+        return "redirect:/admin/questions?subject=" + question.getSubject();
     }
 
     // Edit question form
@@ -179,10 +240,11 @@ public class AdminController {
     public String updateQuestion(@PathVariable Long id,
                                  @ModelAttribute Question question,
                                  @RequestParam List<String> options,
+                                 @RequestParam String subject, // Add this parameter
                                  Model model) {
-        // FIXED: Set ID using the path variable
         Question existingQuestion = questionService.getQuestionByIdFromRepository(id);
         if (existingQuestion != null) {
+            existingQuestion.setSubject(subject); // Set the subject
             existingQuestion.setLevel(question.getLevel());
             existingQuestion.setText(question.getText());
             existingQuestion.setOptions(options);
@@ -192,7 +254,7 @@ public class AdminController {
         } else {
             model.addAttribute("error", "Question not found!");
         }
-        return "redirect:/admin/questions";
+        return "redirect:/admin/questions?subject=" + subject;
     }
 
     // Delete question
